@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Sep 21 13:15:28 2020
 
-@author: cjcho
-"""
 import sys
 from netCDF4 import Dataset as NetCDFFile
 import numpy as np
@@ -19,7 +14,7 @@ if not sys.warnoptions:
 start_time=time.clock()
 
 #Model file load
-MDL_file=r'Y:\BGKim\haramoinc_analysis/Water_height_TideBed_1km_108std_st1.nc'
+MDL_file=r'Z:\BGKim\haramoinc_analysis/Water_height_TideBed_1km_108std_st1.nc'
 #MDL_file='../data/MOHID_WH_1km_2018fmt.nc' #201905
 mnc=NetCDFFile(MDL_file)
 MDL_lat2=mnc.variables['t_lat'][:]
@@ -33,22 +28,7 @@ MDL_mask=np.squeeze(MDL_tide[0,:,:]) #mask with nan
 MDL_time=np.array([datetime(int(i[0]),int(i[1]),int(i[2]),int(i[3]),int(i[4]),int(i[5])) for i in MDL_times])
 
 mnc.close()
-###############
-MDL_file=r'Y:\BGKim\haramoinc_analysis/MOHID_WH_1km_2018fmt.nc'
-mnc=NetCDFFile(MDL_file)
-mnc.variables.keys()
-MDL_lat=mnc.variables['lat'][:]
-MDL_lon=mnc.variables['lon'][:]
-MDL_tide=mnc.variables['tide'][:]
-MDL_day=mnc.variables['Day'][:]
-MDL_hour=mnc.variables['Hour'][:]
-mnc.close()
-MDL_mask=np.squeeze(MDL_tide[0,:,:]) #mask with nan
-MDL_lon2,MDL_lat2=np.meshgrid(MDL_lon,MDL_lat)
-MDL_time=np.array([datetime(1,1,1,0,0,0)+timedelta(days=MDL_day[i]-1.,seconds=np.float(MDL_hour[i])*3600) for i in range(len(MDL_day))])
-MDL_mask=np.squeeze(MDL_tide[0,:,:]) #mask with nan
-#MDL_lon2,MDL_lat2=np.meshgrid(MDL_lon,MDL_lat)
-#################
+
 toolbar_width=20
 
 HA_list=['M2','S2','K1','O1']
@@ -62,16 +42,16 @@ cal_amp=np.zeros((4,np.size(MDL_lat2,0),np.size(MDL_lat2,1)),dtype=np.float)*np.
 cal_pha=cal_amp.copy(); cal_snr=cal_amp.copy()
 for ri in range(np.size(MDL_lat2,0)):
     cnt_lat=MDL_lat2[ri,0]
-    if cnt_lat==37.55:
+    if cnt_lat==37.45:
         break
     for ci in range(np.size(MDL_lat2,1)):
         cnt_lon=MDL_lon2[0,ci]
-        if cnt_lon==129.12:
+        if cnt_lon==126.59:
             break
 cnt_val=MDL_mask[ri,ci]
 cnt_tide=MDL_tide[:,ri,ci]
-
 tide_result=tt.t_tide(cnt_tide,out_style=None,lat=35,dt=1,stime=MDL_time[0])
+
 tide_result['z0']
 import pandas as pd
 #pd.DataFrame(index=tfit_e['nameu'],data=tfit_e['tidecon'])
